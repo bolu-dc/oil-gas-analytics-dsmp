@@ -79,8 +79,7 @@ def load_map_data():
     df['geometry'] = df['geometry'].apply(wkt.loads)  # <-- Fix here
     
     # Create GeoDataFrame
-    gdf = gpd.GeoDataFrame(df, geometry='geometry')
-    gdf.set_crs("EPSG:4326", inplace=True)
+    gdf = gpd.GeoDataFrame(df, geometry=gpd.GeoSeries.from_wkt(df['geometry']))
     return gdf
 
 df_all = load_data()
