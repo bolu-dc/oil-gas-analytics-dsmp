@@ -66,7 +66,7 @@ def load_data():
 # --- Load Map Data directly from parquet ---
 @st.cache_data
 def load_map_data():
-    df = pd.read_parquet('geo_maps_oil_UPDATED.parquet')
+    df = pd.read_parquet('geo_maps_oil.parquet')
     gdf = gpd.GeoDataFrame(df, geometry=gpd.GeoSeries.from_wkt(df['geometry']))
     return gdf
 
