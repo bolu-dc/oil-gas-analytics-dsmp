@@ -63,10 +63,17 @@ def load_data():
     df_all = df_all[df_all['period'] <= pd.Timestamp('2025-01-31')]
     return df_all
 
-# --- Load Map Data directly from parquet ---
+# --- Load Map Data from Google Drive CSV ---
 @st.cache_data
 def load_map_data():
-    df = pd.read_parquet('geo_maps_oil.parquet')
+    # Convert your Google Drive share link to a direct download link
+    file_id = "1wmxyBQKdXXTCng2pfBpKGdg6F0jyx2uI"
+    csv_url = f"https://drive.google.com/uc?export=download&id={file_id}"
+    
+    # Load CSV directly from Google Drive
+    df = pd.read_csv(csv_url)
+    
+    # Convert to GeoDataFrame (assuming your CSV has a 'geometry' column)
     gdf = gpd.GeoDataFrame(df, geometry='geometry')
     gdf.set_crs("EPSG:4326", inplace=True)
     return gdf
