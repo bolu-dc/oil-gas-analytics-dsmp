@@ -6,3 +6,4 @@ shapely
 scikit-learn
 openpyxl
 requests
+numpy
