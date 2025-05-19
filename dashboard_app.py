@@ -64,16 +64,21 @@ def load_data():
     return df_all
 
 # --- Load Map Data from Google Drive CSV ---
+from shapely import wkt  # Add this import
+
 @st.cache_data
 def load_map_data():
-    # Convert your Google Drive share link to a direct download link
+    # Direct download link from Google Drive
     file_id = "1wmxyBQKdXXTCng2pfBpKGdg6F0jyx2uI"
     csv_url = f"https://drive.google.com/uc?export=download&id={file_id}"
     
-    # Load CSV directly from Google Drive
+    # Load CSV
     df = pd.read_csv(csv_url)
     
-    # Convert to GeoDataFrame (assuming your CSV has a 'geometry' column)
+    # Convert string geometry to Shapely objects
+    df['geometry'] = df['geometry'].apply(wkt.loads)  # <-- Fix here
+    
+    # Create GeoDataFrame
     gdf = gpd.GeoDataFrame(df, geometry='geometry')
     gdf.set_crs("EPSG:4326", inplace=True)
     return gdf
