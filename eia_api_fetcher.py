@@ -1,11 +1,6 @@
 import requests
 import pandas as pd
-import dash
-from dash import dcc, html
-import plotly.graph_objs as go
 import plotly.express as px
-from dash import dash_table
-from dash.dependencies import Input, Output
 import numpy as np
 from sklearn.linear_model import Ridge
 
