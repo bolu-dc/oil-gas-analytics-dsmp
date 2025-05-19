@@ -67,7 +67,8 @@ def load_data():
 @st.cache_data
 def load_map_data():
     df = pd.read_parquet('geo_maps_oil.parquet')
-    gdf = gpd.GeoDataFrame(df, geometry=gpd.GeoSeries.from_wkt(df['geometry']))
+    gdf = gpd.GeoDataFrame(df, geometry='geometry')
+    gdf.set_crs("EPSG:4326", inplace=True)
     return gdf
 
 df_all = load_data()
