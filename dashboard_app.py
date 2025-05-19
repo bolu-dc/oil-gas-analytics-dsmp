@@ -63,10 +63,10 @@ def load_data():
     df_all = df_all[df_all['period'] <= pd.Timestamp('2025-01-31')]
     return df_all
 
-# --- Load Map Data directly from CSV ---
+# --- Load Map Data directly from parquet ---
 @st.cache_data
 def load_map_data():
-    df = pd.read_csv('geo_maps_oil_UPDATED.csv')
+    df = pd.read_parquet('geo_maps_oil_UPDATED.parquet')
     gdf = gpd.GeoDataFrame(df, geometry=gpd.GeoSeries.from_wkt(df['geometry']))
     return gdf
 
@@ -117,7 +117,7 @@ if use_recent:
 else:
     df = df[(df['period'] >= start) & (df['period'] <= end)]
 
-# --- Map Data Filtering (always use geo_maps_oil_UPDATED.csv as base) ---
+# --- Map Data Filtering ---
 gdf_map = gdf_map_full.copy()
 
 # Filter by year and month range
