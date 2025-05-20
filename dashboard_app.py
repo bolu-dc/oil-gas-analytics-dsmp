@@ -72,24 +72,27 @@ def load_map_data():
     # 1. Find and sort the part files
     files = glob.glob('geo_maps_oil_part_*.csv')
     
-    # Sort by part number
+    # Optional: sort by the part number in the filename
     def part_num(fname):
         m = re.search(r'geo_maps_oil_part_(\d+)\.csv$', fname)
         return int(m.group(1)) if m else float('inf')
     
     files = sorted(files, key=part_num)
     
-    # 2. Read and concatenate
+    # 2. Read each into a DataFrame
     df_list = [pd.read_csv(f) for f in files]
-    df = pd.concat(df_list, ignore_index=True)
-
-    # 3. Convert geometry from WKT strings
-    df['geometry'] = df['geometry'].apply(wkt.loads)
-
-    # 4. Create GeoDataFrame
-    gdf = gpd.GeoDataFrame(df, geometry='geometry')
-    gdf.set_crs("EPSG:4326", inplace=True)
     
+    # 3. Concatenate them into one DataFrame
+    df = pd.concat(df_list, ignore_index=True)
+    
+    # Clean column names
+    df.columns = df.columns.str.strip().str.lower()
+
+    # parse WKT once
+    df["geometry"] = df["geometry"].apply(wkt.loads)
+
+    # let GeoPandas pick up the existing geometry column
+    gdf = gpd.GeoDataFrame(df, geometry="geometry")
     return gdf
 
 df_all = load_data()
