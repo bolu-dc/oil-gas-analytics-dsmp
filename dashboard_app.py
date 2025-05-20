@@ -77,7 +77,7 @@ def load_map_data():
     df.columns = df.columns.str.strip()  # Remove leading/trailing spaces
     
     # Create GeoDataFrame
-    gdf = gpd.GeoDataFrame(df, geometry=gpd.GeoSeries.from_wkt(df['geometry']))
+    gdf = gpd.GeoDataFrame(df, geometry=gpd.GeoSeries.from_wkt(df["geometry"]))
     return gdf
 
 df_all = load_data()
