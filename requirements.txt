@@ -8,5 +8,4 @@ openpyxl
 requests
 numpy
 pyarrow
-glob
 re
