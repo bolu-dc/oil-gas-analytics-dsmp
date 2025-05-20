@@ -69,12 +69,12 @@ from shapely import wkt  # Add this import
 @st.cache_data
 def load_map_data():
     # Load CSV from Google Drive
-    csv_url = "https://drive.google.com/uc?export=download&id=1wmxyBQKdXXTCng2pfBpKGdg6F0jyx2uI"
+    csv_url = f"https://drive.google.com/uc?export=download&id=1wmxyBQKdXXTCng2pfBpKGdg6F0jyx2uI&confirm=t"
     df = pd.read_csv(csv_url)
     
     # Clean column names (trim spaces and lowercase)
     df.columns = df.columns.str.strip().str.lower()
-    
+
     # Debug: Print columns to verify
     st.write("Columns after cleanup:", df.columns.tolist())
     
