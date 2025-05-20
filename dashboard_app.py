@@ -74,6 +74,7 @@ def load_map_data():
     
     # Load CSV
     df = pd.read_csv(csv_url)
+    df.columns = df.columns.str.strip()  # Remove leading/trailing spaces
     
     # Create GeoDataFrame
     gdf = gpd.GeoDataFrame(df, geometry=gpd.GeoSeries.from_wkt(df['geometry']))
