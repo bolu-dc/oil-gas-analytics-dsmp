@@ -7,7 +7,8 @@ from shapely.geometry import mapping
 from sklearn.linear_model import Ridge
 from eia_api_fetcher import fetch_usa_data
 from shapely import wkt
-import gdown
+import glob
+import re
 
 # --- Load Canadian Data ---
 @st.cache_data
@@ -68,13 +69,21 @@ def load_data():
 # --- Load Map Data from Google Drive CSV ---
 @st.cache_data
 def load_map_data():
-    # Load CSV from Google Drive
-    url = "https://drive.google.com/file/d/1wmxyBQKdXXTCng2pfBpKGdg6F0jyx2uI/view?usp=sharing"
-    output = "geo_maps_oil.csv"
-    gdown.download(url, output, quiet=False, fuzzy=True)
+    # 1. Find and sort the part files
+    files = glob.glob('geo_maps_oil_part_*.csv')
     
-    # Load the downloaded CSV
-    df = pd.read_csv(output)
+    # Optional: sort by the part number in the filename
+    def part_num(fname):
+        m = re.search(r'geo_maps_oil_part_(\d+)\.csv$', fname)
+        return int(m.group(1)) if m else float('inf')
+    
+    files = sorted(files, key=part_num)
+    
+    # 2. Read each into a DataFrame
+    df_list = [pd.read_csv(f) for f in files]
+    
+    # 3. Concatenate them into one DataFrame
+    df = pd.concat(df_list, ignore_index=True)
     
     # Clean column names
     df.columns = df.columns.str.strip().str.lower()
