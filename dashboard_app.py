@@ -88,11 +88,8 @@ def load_map_data():
     # Clean column names
     df.columns = df.columns.str.strip().str.lower()
     
-    # Convert WKT strings to geometries
-    df["geometry"] = df["geometry"].apply(wkt.loads)
-    
-    # Create GeoDataFrame
-    gdf = gpd.GeoDataFrame(df, geometry=gpd.GeoSeries.from_wkt(df["geometry"]))
+    gdf = gpd.GeoDataFrame(df, geometry='geometry')
+    gdf.set_crs("EPSG:4326", inplace=True)
     return gdf
 
 df_all = load_data()
