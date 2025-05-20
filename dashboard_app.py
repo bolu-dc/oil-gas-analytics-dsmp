@@ -66,7 +66,6 @@ def load_data():
     return df_all
 
 # --- Load Map Data from Google Drive CSV ---
-
 @st.cache_data
 def load_map_data():
     # Load CSV from Google Drive
@@ -77,16 +76,8 @@ def load_map_data():
     # Load the downloaded CSV
     df = pd.read_csv(output)
     
-    # Clean column names (trim spaces and lowercase)
+    # Clean column names
     df.columns = df.columns.str.strip().str.lower()
-
-    # Debug: Print columns to verify
-    st.write("Columns after cleanup:", df.columns.tolist())
-    
-    # Check if 'geometry' exists
-    if "geometry" not in df.columns:
-        st.error("❌ 'geometry' column is missing in the CSV!")
-        return None
     
     # Convert WKT strings to geometries
     df["geometry"] = df["geometry"].apply(wkt.loads)
