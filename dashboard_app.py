@@ -75,9 +75,6 @@ def load_map_data():
     # Load CSV
     df = pd.read_csv(csv_url)
     
-    # Convert string geometry to Shapely objects
-    df['geometry'] = df['geometry'].apply(wkt.loads)  # <-- Fix here
-    
     # Create GeoDataFrame
     gdf = gpd.GeoDataFrame(df, geometry=gpd.GeoSeries.from_wkt(df['geometry']))
     return gdf
