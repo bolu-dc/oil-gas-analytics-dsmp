@@ -68,13 +68,23 @@ from shapely import wkt  # Add this import
 
 @st.cache_data
 def load_map_data():
-    # Direct download link from Google Drive
-    file_id = "1wmxyBQKdXXTCng2pfBpKGdg6F0jyx2uI"
-    csv_url = f"https://drive.google.com/uc?export=download&id={file_id}"
-    
-    # Load CSV
+    # Load CSV from Google Drive
+    csv_url = "https://drive.google.com/uc?export=download&id=1wmxyBQKdXXTCng2pfBpKGdg6F0jyx2uI"
     df = pd.read_csv(csv_url)
-    df.columns = df.columns.str.strip()  # Remove leading/trailing spaces
+    
+    # Clean column names (trim spaces and lowercase)
+    df.columns = df.columns.str.strip().str.lower()
+    
+    # Debug: Print columns to verify
+    st.write("Columns after cleanup:", df.columns.tolist())
+    
+    # Check if 'geometry' exists
+    if "geometry" not in df.columns:
+        st.error("❌ 'geometry' column is missing in the CSV!")
+        return None
+    
+    # Convert WKT strings to geometries
+    df["geometry"] = df["geometry"].apply(wkt.loads)
     
     # Create GeoDataFrame
     gdf = gpd.GeoDataFrame(df, geometry=gpd.GeoSeries.from_wkt(df["geometry"]))
