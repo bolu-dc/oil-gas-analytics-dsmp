@@ -6,6 +6,8 @@ import plotly.graph_objs as go
 from shapely.geometry import mapping
 from sklearn.linear_model import Ridge
 from eia_api_fetcher import fetch_usa_data
+from shapely import wkt
+import gdown
 
 # --- Load Canadian Data ---
 @st.cache_data
@@ -64,13 +66,16 @@ def load_data():
     return df_all
 
 # --- Load Map Data from Google Drive CSV ---
-from shapely import wkt  # Add this import
 
 @st.cache_data
 def load_map_data():
     # Load CSV from Google Drive
-    csv_url = f"https://drive.google.com/uc?export=download&id=1wmxyBQKdXXTCng2pfBpKGdg6F0jyx2uI&confirm=t"
-    df = pd.read_csv(csv_url)
+    url = "https://drive.google.com/file/d/1wmxyBQKdXXTCng2pfBpKGdg6F0jyx2uI/view?usp=sharing"
+    output = "geo_maps_oil.csv"
+    gdown.download(url, output, quiet=False, fuzzy=True)
+    
+    # Load the downloaded CSV
+    df = pd.read_csv(output)
     
     # Clean column names (trim spaces and lowercase)
     df.columns = df.columns.str.strip().str.lower()
