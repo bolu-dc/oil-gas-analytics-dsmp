@@ -96,7 +96,11 @@ def load_map_data():
     return gdf
 
 df_all = load_data()
-gdf_map_full = load_map_data()
+gdf_map_full = None
+if st.sidebar.button("Load Map Data"):
+    st.write("⏳ Loading map data...")
+    gdf_map_full = load_map_data()
+    st.write("✅ Map data loaded")
 countries = df_all['country'].unique()
 states_by_country = {c: sorted(df_all[df_all['country']==c]['state'].unique()) for c in countries}
 
